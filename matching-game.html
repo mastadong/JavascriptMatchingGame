@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    
+    <style>
+        h1 {
+            text-align: center;
+        }
+        p {
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+            border: 1px black solid;
+        }
+
+        img {
+            margin-left: auto;
+            margin-right: auto;
+            position: absolute;
+        }
+        div {
+            margin: auto;
+            position: absolute;
+            width: 500px; 
+            height: 500px;
+        }
+
+        #rightSide {
+            width: 50%;
+            height: 500px;
+            left: 500px;
+            border-left: 1px solid;
+        }
+        
+        label{
+            font-size: 72pt;
+            text-align: center;
+        }
+
+
+    </style>
+</head>
+<body onload="generateFaces()">
+    
+    <h1>Matching Game</h1>
+    <p>Click on the extra smiling face on the left</p>
+    <h2>Level 1</h4>
+    <div id="leftSide"></div>
+    <div id="rightSide"></div>
+    
+    
+    <script>
+
+        let numberOfFaces = 5;
+        const theLeftSide = document.getElementById('leftSide');
+        const theRightSide = document.getElementById('rightSide');
+        // const theLeftSide = document.querySelector('#leftSide');
+
+        function generateFaces(){
+
+            //Generate the left side images.
+            for(let i = 0; i < numberOfFaces; i++){
+                
+                // alert('i = ' + i);
+                let face = document.createElement('img');
+                face.src = "smile.png";
+
+                //Generate TOP and LEFT 
+                randomTop = Math.floor(Math.random()*400); 
+                randomLeft = Math.floor(Math.random()*400);
+
+                // alert("the new coordinates are: " + randomTop + ", " +  randomLeft);
+                
+                //Assign parameters
+                face.style.top = randomTop + 'px';
+                face.style.left = randomLeft + 'px';
+
+                //Append to left div.
+                theLeftSide.appendChild(face);
+            }
+
+            //Generate and append the right side images, which are a clone of the left side branch, minus the lastChildElement.  
+            const leftSideImages = theLeftSide.cloneNode(true);
+            leftSideImages.removeChild(leftSideImages.lastChild);
+            theRightSide.appendChild(leftSideImages);
+
+            //Assign the event handler to the lastChild element on the left side, since this will be the extra smiley face.
+            // let extraFace = theLeftSide.lastElementChild();
+            theLeftSide.lastChild.addEventListener('click', nextLevel);
+
+            // //Handle non-face click events
+            document.body.addEventListener('click', gameOver);
+
+        }
+
+        //Refreshes the game after incrementing to the next level.
+        function nextLevel(){
+            //Handle the event.
+            event.stopPropagation();
+            //Reset the game.
+            numberOfFaces += 1;
+
+            removeAllSmileyFaces(theLeftSide);
+            removeAllSmileyFaces(theRightSide);
+
+            generateFaces();
+        }
+        //Display alerts to user and remove event listeners
+        function gameOver(){
+            alert('Game Over');
+            //Remove the event handlers
+            theLeftSide.lastChild.removeEventListener('click', nextLevel);
+            document.body.removeEventListener('click', gameOver);
+
+        }
+        //Remove all child nodes for the provided target node. 
+        function removeAllSmileyFaces(targetNode){
+
+            while (targetNode.firstChild) {
+                targetNode.removeChild(targetNode.firstChild);
+        }
+    }
+
+    </script>
+
+  
+
+
+</body>
+</html> 
